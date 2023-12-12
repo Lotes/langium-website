@@ -1,4 +1,4 @@
-import { MonacoEditorReactComp } from "./static/libs/monaco-editor-react/monaco-editor-react.js";
+import { addMonacoStyles, createUserConfig, MonacoEditorReactComp, UserConfig } from "langium-website-core/bundle";
 import { buildWorkerDefinition } from "monaco-editor-workers";
 import React from "react";
 import { createRoot } from "react-dom/client";
@@ -9,8 +9,8 @@ import {
   defaultText,
   syntaxHighlighting,
 } from "./constants";
-import { UserConfig } from "monaco-editor-wrapper";
-import { createUserConfig } from '../utils';
+
+addMonacoStyles('monaco-styles-helper');
 
 buildWorkerDefinition(
   "../../libs/monaco-editor-workers/workers",
@@ -84,7 +84,7 @@ class App extends React.Component<{}> {
         <div className="w-1/2 p-4 text-white overflow-auto">
           <h1 className="text-2xl">Langium/SQL</h1>
           <p className="pt-2">
-            This is a showcase of <a className="text-emeraldLangium" href="https://github.com/eclipse-langium/langium-sql" target="_blank">Langium/SQL</a>. The editor above
+            This is a showcase of <a className="text-emeraldLangium" href="https://github.com/langium/langium-sql" target="_blank">Langium/SQL</a>. The editor above
             is a Monaco editor driven by our SQL language server. The current setup mimics <a className="text-emeraldLangium" href="https://www.mysql.com" target="_blank">MySQL</a>.
           </p>
           <h2 className="text-xl pt-4 underline">Features</h2>

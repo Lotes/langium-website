@@ -7,7 +7,7 @@ weight: 0
 
 In this tutorial we will be talking about writing a grammar for your language in Langium. As a motivating example, we'll be describing how to write a grammar for the MiniLogo language. If you're not familiar with MiniLogo, it's a smaller implementation of the Logo programming language. Logo itself is a lot like Turtle from Python. Ultimately, we'll be using MiniLogo to express drawing instructions that can be used to draw on a canvas.
 
-We've already written an implementation of [MiniLogo on Github using Langium](https://github.com/eclipse-langium/langium-minilogo). This tutorial will be following along with this project, by walking through the grammar implementation step by step. Later tutorials will also follow along with MiniLogo to create an easy to follow series.
+We've already written an implementation of [MiniLogo on Github using Langium](https://github.com/langium/langium-minilogo). This tutorial will be following along with this project, by walking through the grammar implementation step by step. Later tutorials will also follow along with MiniLogo to create an easy to follow series.
 
 ## Planning
 
@@ -36,7 +36,7 @@ Now that we have an idea of our semantics and our concrete syntax, we can then s
 
 As an aside, our version of MiniLogo will be an *approximation* of Dr. Walkingshaw's version. We won't adhere to it completely, and we won't be incorporating some elements, such as variable declarations.
 
-To get started sketching the grammar we'll be using the **Hello World** example from the yeoman generator. You can read about how to get this setup in the [Getting Started](/docs/getting-started/) section of our docs. We'll be working with a fresh from the generator using only the defaults, and building up from that. We'll begin by modifying the default grammar file, and updating it to work for MiniLogo. You can find this file under **src/language-server/hello-world.langium** in your new project. If you used a name other than the default, the file will still be there, but using your custom name instead.
+To get started sketching the grammar we'll be using the **Hello World** example from the yeoman generator. You can read about how to get this setup in the [Getting Started](/docs/getting-started/) section of our docs. We'll be working with a fresh from the generator using only the defaults, and building up from that. We'll begin by modifying the default grammar file, and updating it to work for MiniLogo. You can find this file under **src/language/hello-world.langium** in your new project. If you used a name other than the default, the file will still be there, but using your custom name instead.
 
 We'll be overriding the existing langium grammar file completely, so delete the old contents before we begin.
 

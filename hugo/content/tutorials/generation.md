@@ -17,7 +17,7 @@ To write the generator, we're going to work in the **src/cli/generator.ts** file
 
 ```ts
 // import the 'Model' type from our semantic model
-import { Model } from '../language-server/generated/ast.ts';
+import { Model } from '../language/generated/ast.ts';
 
 export function generateCommands(mode: Model, filePath: string, destination: string | undefined): string {
     // ...
@@ -84,7 +84,7 @@ Now, let's expand on `generateStatements`. From our grammar, there are 5 types o
 We we want to expand our function to handle each of these cases. This is easy to do using some special `isTYPE` functions made available from our semantic model. These are automatically generated from our grammar, and allow us to verify the type of a node from our AST at runtime.
 
 ```ts
-import { isPen, isMove, isMacro, isFor, isColor } from '../language-server/generated/ast';
+import { isPen, isMove, isMacro, isFor, isColor } from '../language/generated/ast';
 
 ...
 
@@ -371,7 +371,7 @@ our JSON output should be:
 ]
 ```
 
-If you're looking at the implementation of [MiniLogo that we've already written in the Langium organization on Github](https://github.com/eclipse-langium/langium-minilogo), you may notice that the program and output there are *slightly* different. This interpretation of MiniLogo has gone through some iterations, and so there are some slight differences here and there. What's most important is that your version produces the generated output that you expect.
+If you're looking at the implementation of [MiniLogo that we've already written in the Langium organization on Github](https://github.com/langium/langium-minilogo), you may notice that the program and output there are *slightly* different. This interpretation of MiniLogo has gone through some iterations, and so there are some slight differences here and there. What's most important is that your version produces the generated output that you expect.
 
 We could continue to extend on this with new features, and generate new sorts of output using a given input language. In this tutorial, we're able to take a MiniLogo program and convert it into some simple JSON drawing instructions that can be consumed by another program. This opens the door for us to write such a program in another language, such as Python or Javascript, and draw with these results. In later tutorials, we'll be talking about how to run Langium in the web with generation, so that we can immediately verify our results by drawing on an HTML5 canvas.
 
