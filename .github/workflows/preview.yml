@@ -1,0 +1,91 @@
+name: Deploy PR previews
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, closed]
+    branches: ["lotes/nextra"]
+
+concurrency: preview-${{ github.head_ref }}
+
+jobs:
+  build-preview:
+    if: github.event_name == 'pull_request_target' && github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Uncomment when Phase 6 (Core Package & Worker Build) is complete:
+      # - name: Build workers
+      #   run: npm run build:workers
+
+      - name: Build Next.js site
+        run: npm run build
+        env:
+          NEXT_PUBLIC_BASE_PATH: /pr-previews/pr-${{ github.event.number }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: ./out
+
+  deploy-preview:
+    needs: build-preview
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    environment:
+      name: pull-request-preview
+      url: ${{ steps.deployment.outputs.deployment-url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download site artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: ./out
+
+      - name: Deploy PR preview
+        uses: rossjrw/pr-preview-action@v1
+        id: deployment
+        with:
+          source-dir: ./out
+          preview-branch: previews
+          umbrella-dir: pr-previews
+          deploy-repository: eclipse-langium/langium-previews
+          token: ${{ secrets.DEPLOY_PREVIEW_TOKEN }}
+          action: auto
+
+  remove-preview:
+    if: github.event_name == 'pull_request_target' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Remove PR preview
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          preview-branch: previews
+          umbrella-dir: pr-previews
+          deploy-repository: eclipse-langium/langium-previews
+          token: ${{ secrets.DEPLOY_PREVIEW_TOKEN }}
+          action: auto

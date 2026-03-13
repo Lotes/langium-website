@@ -1503,41 +1503,41 @@ jobs:
 ## 16. Migration Checklist
 
 ### Phase 1 — Project Setup
-- [ ] Initialize root `package.json` and npm workspaces (`core`)
-- [ ] Install Next.js, Nextra, React via `npm install`
-- [ ] Install TailwindCSS, PostCSS, autoprefixer
-- [ ] Install TypeScript, type definitions
-- [ ] Install GSAP, Mermaid
-- [ ] Create `next.config.mjs`
-- [ ] Create `theme.config.tsx`
-- [ ] Create `tailwind.config.ts` (brand colors match old site exactly)
-- [ ] Create `postcss.config.js`
-- [ ] Create `tsconfig.json`
-- [ ] Create `app/globals.css` (port `custom.css` + Tailwind directives)
+- [x] Initialize root `package.json` and npm workspaces (`core`)
+- [x] Install Next.js, Nextra, React via `npm install`
+- [x] Install TailwindCSS, PostCSS, autoprefixer
+- [x] Install TypeScript, type definitions
+- [x] Install GSAP, Mermaid
+- [x] Create `next.config.mjs`
+- [x] Create `theme.config.tsx`
+- [x] Create `tailwind.config.ts` (brand colors match old site exactly)
+- [x] Create `postcss.config.js`
+- [x] Create `tsconfig.json`
+- [x] Create `app/globals.css` (port `custom.css` + Tailwind directives)
 
 ### Phase 2 — Static Assets
-- [ ] Copy `hugo/static/assets/` → `public/assets/`
-- [ ] Copy `hugo/static/favicon/` → `public/favicon/`
-- [ ] Copy `hugo/static/prism/` → `public/prism/`
-- [ ] Create `public/showcase/libs/worker/` (populated by core build)
-- [ ] Create `public/playground/libs/worker/` (populated by core build)
+- [x] Copy `hugo/static/assets/` → `public/assets/`
+- [x] Copy `hugo/static/favicon/` → `public/favicon/`
+- [x] Copy `hugo/static/prism/` → `public/prism/`
+- [x] Create `public/showcase/libs/worker/` (populated by core build)
+- [x] Create `public/playground/libs/worker/` (populated by core build)
 
 ### Phase 3 — Global Components
-- [ ] `app/layout.tsx` (root HTML layout)
-- [ ] `components/Header.tsx` (header + desktop nav)
-- [ ] `components/MobileMenu.tsx` (slide-out mobile nav, replaces Alpine.js)
-- [ ] `components/Footer.tsx` (footer with Eclipse links)
-- [ ] `components/CommunitySection.tsx` (npm + GitHub icons)
-- [ ] `components/Notification.tsx` (MDX warning box)
-- [ ] `components/MermaidDiagram.tsx` (Mermaid renderer)
+- [x] `app/layout.tsx` (root HTML layout)
+- [x] `components/Header.tsx` (header + desktop nav)
+- [x] `components/MobileMenu.tsx` (slide-out mobile nav, replaces Alpine.js)
+- [x] `components/Footer.tsx` (footer with Eclipse links)
+- [x] `components/CommunitySection.tsx` (npm + GitHub icons)
+- [x] `components/Notification.tsx` (MDX warning box)
+- [x] `components/MermaidDiagram.tsx` (Mermaid renderer)
 
 ### Phase 4 — Front Page
-- [ ] `app/page.tsx`
-- [ ] `components/home/TeaserSection.tsx` (hero with parallax)
-- [ ] `components/home/AboutSection.tsx` ("Why Langium?" cards)
-- [ ] `components/home/FeaturesCarousel.tsx` (sliding features)
-- [ ] `components/home/VsSection.tsx` ("Langium vs. Xtext")
-- [ ] `components/home/HomeAnimations.tsx` (GSAP animations from `index.js`)
+- [x] `app/page.tsx`
+- [x] `components/home/TeaserSection.tsx` (hero with parallax)
+- [x] `components/home/AboutSection.tsx` ("Why Langium?" cards)
+- [x] `components/home/FeaturesCarousel.tsx` (sliding features)
+- [x] `components/home/VsSection.tsx` ("Langium vs. Xtext")
+- [x] `components/home/HomeAnimations.tsx` (GSAP animations from `index.js`)
 
 ### Phase 5 — Documentation
 - [ ] `app/docs/layout.tsx` (Nextra docs theme)
@@ -1546,6 +1546,7 @@ jobs:
 - [ ] Replace `{{< notification >}}` with `<Notification>` in all MDX files
 - [ ] Replace `{{< mermaid >}}` with `<MermaidDiagram>` in workflow page
 - [ ] Configure Shiki with Langium grammar for code highlighting
+- [ ] Update workflow files: uncomment steps that are now ready in `deploy.yml` and `preview.yml`
 
 ### Phase 6 — Core Package & Worker Build
 - [ ] Move playground TS source to `core/src/playground/`
@@ -1553,11 +1554,13 @@ jobs:
 - [ ] Add `vite.playground-worker.ts` build config
 - [ ] Update `vite.showcase-worker.ts` build config
 - [ ] Verify all workers build and output to `public/`
+- [ ] Update workflow files: uncomment the `Build workers` step in `deploy.yml` and `preview.yml`
 
 ### Phase 7 — Playground
 - [ ] `app/playground/layout.tsx` (full-screen, no sidebar)
 - [ ] `app/playground/page.tsx` (3-panel Monaco editor)
 - [ ] Test URL sharing (base64 encode/decode of state)
+- [ ] Update workflow files: uncomment steps that are now ready in `deploy.yml` and `preview.yml`
 
 ### Phase 8 — Showcase
 - [ ] `app/showcase/layout.tsx` (shared layout — single file for all showcases)
@@ -1570,18 +1573,22 @@ jobs:
 - [ ] `app/showcase/sql/page.tsx` (self-contained)
 - [ ] `app/showcase/domainmodel/page.tsx` (self-contained)
 - [ ] `app/showcase/openapi/page.tsx` (external redirect)
+- [ ] Update workflow files: uncomment steps that are now ready in `deploy.yml` and `preview.yml`
 
 ### Phase 9 — API Redirect
 - [ ] `app/api/page.tsx` (or `next.config.mjs` redirect for static export)
+- [ ] Update workflow files: uncomment steps that are now ready in `deploy.yml` and `preview.yml`
 
 ### Phase 10 — URL Redirects
 - [ ] Add all Hugo alias redirects to `next.config.mjs`
 - [ ] Create `scripts/generate-redirects.ts` for static export redirect stubs
 - [ ] Verify all old URLs from `migration/LINKS.md` resolve correctly
+- [ ] Update workflow files: uncomment steps that are now ready in `deploy.yml` and `preview.yml`
 
 ### Phase 11 — CI/CD Workflows
-- [ ] `.github/workflows/deploy.yml` (deploy to gh-pages from `lotes/nextra`)
-- [ ] `.github/workflows/preview.yml` (PR previews for PRs targeting `lotes/nextra`)
+- [x] `.github/workflows/deploy.yml` (deploy to gh-pages from `lotes/nextra`)
+- [x] `.github/workflows/preview.yml` (PR previews for PRs targeting `lotes/nextra`)
+- [ ] Uncomment `Build workers` step in both workflows once Phase 6 is complete
 
 ### Phase 12 — Verification
 - [ ] Run `npm run build` — site builds without errors
@@ -1596,4 +1603,4 @@ jobs:
 
 ---
 
-*Last updated: migration planning phase — no implementation yet.*
+*Last updated: phases 1–4 and partial phase 11 implemented.*

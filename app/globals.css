@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Carry over all rules from old-website/hugo/static/custom.css ── */
+
+/* Nav link styles used in Header */
+@layer components {
+  .nav-link-desktop {
+    @apply text-gray-900 dark:text-gray-100 hover:text-emeraldLangium
+           dark:hover:text-emeraldLangium transition-colors duration-150;
+  }
+
+  .nav-link-mobile {
+    @apply block w-full py-2 text-gray-900 dark:text-gray-200
+           hover:text-emeraldLangium dark:hover:text-emeraldLangium
+           transition-colors duration-150;
+  }
+
+  /* About/compare item cards */
+  .about-item-container { @apply flex flex-col items-center; }
+  .about-item          { @apply flex flex-col items-center text-center max-w-sm; }
+  .about-item-icon-container { @apply flex items-center justify-center h-40 mb-4; }
+  .about-item-title    { @apply mt-4 text-lg font-medium dark:text-gray-100; }
+  .item-text           { @apply mt-2 dark:text-gray-100 font-body; }
+
+  /* Feature carousel */
+  .feature-item-container { @apply min-w-featureItem px-6 py-4; }
+  .feature-item-content   { @apply dark:bg-emeraldLangiumDarker rounded-xl p-6; }
+  .feature-direction      { @apply bg-emeraldLangiumDarker; }
+
+  /* Compare (vs Xtext) items */
+  .compare-item-container { @apply dark:bg-emeraldLangiumDarker rounded-xl p-6 overflow-hidden; }
+  .compare-item           { @apply flow-root; }
+
+  /* External link style */
+  .external-link {
+    @apply text-emeraldLangium hover:text-emeraldLangiumABitDarker underline;
+  }
+
+  /* Footer */
+  #website-footer a { @apply hover:underline; }
+}

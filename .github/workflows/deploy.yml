@@ -1,0 +1,44 @@
+name: Deploy Nextra site to Pages
+
+on:
+  push:
+    branches: ["lotes/nextra"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Uncomment when Phase 6 (Core Package & Worker Build) is complete:
+      # - name: Build workers
+      #   run: npm run build:workers
+
+      - name: Build Next.js site
+        run: npm run build
+        # Produces static output in ./out
+
+      - name: Deploy to gh-pages branch
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: out
+          clean: true
