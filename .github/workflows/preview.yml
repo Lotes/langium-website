@@ -1,91 +1,81 @@
-name: Deploy PR previews
+# Workflow for building and deploying PR preview deployments to GitHub Pages.
+#
+# Each open PR is deployed to:
+#   https://lotes.github.io/langium-website/pr-preview/pr-<number>/
+#
+# Previews are automatically removed when a PR is closed.
+#
+name: PR Preview
 
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, synchronize, reopened, closed]
-    branches: ["lotes/nextra"]
 
-concurrency: preview-${{ github.head_ref }}
+# Allow writing to the gh-pages branch and commenting on PRs
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: pr-preview-${{ github.event.number }}
+  cancel-in-progress: true
 
 jobs:
-  build-preview:
-    if: github.event_name == 'pull_request_target' && github.event.action != 'closed'
+  preview:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     steps:
-      - name: Checkout PR
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Setup Node.js
+        if: github.event.action != 'closed'
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
 
+      - name: Restore cache
+        if: github.event.action != 'closed'
+        uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+
       - name: Install dependencies
+        if: github.event.action != 'closed'
         run: npm ci
 
       # Uncomment when Phase 6 (Core Package & Worker Build) is complete:
       # - name: Build workers
+      #   if: github.event.action != 'closed'
       #   run: npm run build:workers
 
       - name: Build Next.js site
-        run: npm run build
+        if: github.event.action != 'closed'
+        run: npx --no-install next build
         env:
-          NEXT_PUBLIC_BASE_PATH: /pr-previews/pr-${{ github.event.number }}
+          NEXT_PUBLIC_BASE_PATH: /langium-website/pr-preview/pr-${{ github.event.number }}
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - name: Ensure .nojekyll at gh-pages root
+        # JamesIves/github-pages-deploy-action places .nojekyll inside the
+        # deployed *folder* (i.e. pr-preview/pr-N/.nojekyll), not at the
+        # gh-pages branch root.  Jekyll silently blocks every directory that
+        # starts with "_", which includes Next.js' "_next/" asset directory.
+        # Deploying a standalone .nojekyll to the branch root fixes that.
+        if: github.event.action != 'closed'
+        run: mkdir /tmp/nojekyll && touch /tmp/nojekyll/.nojekyll
+
+      - name: Deploy .nojekyll to gh-pages root
+        if: github.event.action != 'closed'
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          name: site
-          path: ./out
+          branch: gh-pages
+          folder: /tmp/nojekyll
+          clean: false
 
-  deploy-preview:
-    needs: build-preview
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-    environment:
-      name: pull-request-preview
-      url: ${{ steps.deployment.outputs.deployment-url }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Download site artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: site
-          path: ./out
-
-      - name: Deploy PR preview
-        uses: rossjrw/pr-preview-action@v1
-        id: deployment
-        with:
-          source-dir: ./out
-          preview-branch: previews
-          umbrella-dir: pr-previews
-          deploy-repository: eclipse-langium/langium-previews
-          token: ${{ secrets.DEPLOY_PREVIEW_TOKEN }}
-          action: auto
-
-  remove-preview:
-    if: github.event_name == 'pull_request_target' && github.event.action == 'closed'
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Remove PR preview
+      - name: Deploy / remove PR preview
         uses: rossjrw/pr-preview-action@v1
         with:
-          preview-branch: previews
-          umbrella-dir: pr-previews
-          deploy-repository: eclipse-langium/langium-previews
-          token: ${{ secrets.DEPLOY_PREVIEW_TOKEN }}
-          action: auto
+          source-dir: out
