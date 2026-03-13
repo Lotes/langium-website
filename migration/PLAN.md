@@ -1586,10 +1586,9 @@ jobs:
 - [ ] Update workflow files: uncomment steps that are now ready in `deploy.yml` and `preview.yml`
 
 ### Phase 11 — CI/CD Workflows
-- [x] `.github/workflows/deploy.yml` (created with not-yet-ready steps commented out)
-- [x] `.github/workflows/preview.yml` (created with not-yet-ready steps commented out)
-- [ ] Uncomment all remaining commented-out steps once Phases 5–10 are complete
-- [ ] Update workflow files: uncomment remaining steps in `deploy.yml` and `preview.yml`
+- [x] `.github/workflows/deploy.yml` (deploy to gh-pages from `lotes/nextra`)
+- [x] `.github/workflows/preview.yml` (PR previews for PRs targeting `lotes/nextra`)
+- [ ] Uncomment `Build workers` step in both workflows once Phase 6 is complete
 
 ### Phase 12 — Verification
 - [ ] Run `npm run build` — site builds without errors

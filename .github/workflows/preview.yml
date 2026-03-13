@@ -32,64 +32,60 @@ jobs:
       # - name: Build workers
       #   run: npm run build:workers
 
-      # Uncomment when Phases 5–10 are complete and the full site builds successfully:
-      # - name: Build Next.js site
-      #   run: npm run build
-      #   env:
-      #     NEXT_PUBLIC_BASE_PATH: /pr-previews/pr-${{ github.event.number }}
+      - name: Build Next.js site
+        run: npm run build
+        env:
+          NEXT_PUBLIC_BASE_PATH: /pr-previews/pr-${{ github.event.number }}
 
-      # Uncomment together with the build steps above:
-      # - name: Upload artifact
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: site
-      #     path: ./out
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: ./out
 
-  # Uncomment when the build-preview job uploads an artifact:
-  # deploy-preview:
-  #   needs: build-preview
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     pull-requests: write
-  #   environment:
-  #     name: pull-request-preview
-  #     url: ${{ steps.deployment.outputs.deployment-url }}
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
-  #
-  #     - name: Download site artifact
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: site
-  #         path: ./out
-  #
-  #     - name: Deploy PR preview
-  #       uses: rossjrw/pr-preview-action@v1
-  #       id: deployment
-  #       with:
-  #         source-dir: ./out
-  #         preview-branch: previews
-  #         umbrella-dir: pr-previews
-  #         deploy-repository: eclipse-langium/langium-previews
-  #         token: ${{ secrets.DEPLOY_PREVIEW_TOKEN }}
-  #         action: auto
+  deploy-preview:
+    needs: build-preview
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    environment:
+      name: pull-request-preview
+      url: ${{ steps.deployment.outputs.deployment-url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  # Uncomment when the build-preview job and deploy-preview job are enabled:
-  # remove-preview:
-  #   if: github.event_name == 'pull_request_target' && github.event.action == 'closed'
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     pull-requests: write
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
-  #
-  #     - name: Remove PR preview
-  #       uses: rossjrw/pr-preview-action@v1
-  #       with:
-  #         preview-branch: previews
-  #         umbrella-dir: pr-previews
-  #         deploy-repository: eclipse-langium/langium-previews
-  #         token: ${{ secrets.DEPLOY_PREVIEW_TOKEN }}
-  #         action: auto
+      - name: Download site artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: ./out
+
+      - name: Deploy PR preview
+        uses: rossjrw/pr-preview-action@v1
+        id: deployment
+        with:
+          source-dir: ./out
+          preview-branch: previews
+          umbrella-dir: pr-previews
+          deploy-repository: eclipse-langium/langium-previews
+          token: ${{ secrets.DEPLOY_PREVIEW_TOKEN }}
+          action: auto
+
+  remove-preview:
+    if: github.event_name == 'pull_request_target' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Remove PR preview
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          preview-branch: previews
+          umbrella-dir: pr-previews
+          deploy-repository: eclipse-langium/langium-previews
+          token: ${{ secrets.DEPLOY_PREVIEW_TOKEN }}
+          action: auto
