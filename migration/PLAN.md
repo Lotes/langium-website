@@ -160,7 +160,11 @@ const withNextra = nextra({
 export default withNextra({
   output: 'export',          // Static HTML export for GitHub Pages
   trailingSlash: true,       // Matches old Hugo URL style
-  images: { unoptimized: true }, // Required for static export
+  // Custom loader prepends NEXT_PUBLIC_BASE_PATH to all <Image src="/..."> urls.
+  // Do NOT use images.unoptimized:true — it bypasses the loader and omits basePath.
+  // See §5.1 and imageLoader.ts for details.
+  images: { loader: 'custom', loaderFile: './imageLoader.ts' },
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
   async redirects() {
     return [
       // All Hugo alias redirects — see §14
@@ -450,13 +454,31 @@ export default config
 > The `office` background image URL is updated from `../assets/` to `/assets/` (Next.js
 > serves from `public/`).
 >
-> **⚠️ Base path — CSS background images (applies to all future phases):**
-> Next.js automatically prepends `basePath` to paths used in `<Image>` and `<Link>`
-> components, but it does **not** rewrite plain CSS `background-image: url(...)` values.
-> Any CSS background image that references a `public/` asset must interpolate
-> `process.env.NEXT_PUBLIC_BASE_PATH` so the URL is correct on sub-path deployments
-> (`/langium-website/` for the default branch, `/langium-website/pr-preview/pr-N/` for
-> previews). Failure to do so causes a 404 on every GitHub Pages deployment.
+> **⚠️ Base path — ALL assets (applies to all future phases):**
+>
+> Next.js automatically prepends `basePath` to `<Link href>` paths, but it does **not**
+> do so for:
+>
+> 1. **CSS `background-image: url(...)` values** — Any Tailwind/CSS background image that
+>    references a `public/` asset must interpolate `process.env.NEXT_PUBLIC_BASE_PATH`, e.g.:
+>    ```ts
+>    office: `url('${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/assets/office.jpg')`,
+>    ```
+>
+> 2. **`<Image>` components when `images.unoptimized: true` is set** — With this flag,
+>    Next.js bypasses the image loader entirely and uses `src` as-is, so `basePath` is
+>    never applied.  **Do not use `images.unoptimized: true`.**  Instead, use a custom
+>    `loaderFile` (see `imageLoader.ts` and `next.config.mjs`) that explicitly prepends
+>    `NEXT_PUBLIC_BASE_PATH` to every image src.  This is the only approach that works
+>    correctly with `output: 'export'` on sub-path GitHub Pages deployments.
+>
+> The custom loader in `imageLoader.ts` handles case 2:
+> ```ts
+> export default function imageLoader({ src }: ImageLoaderProps): string {
+>   if (!src.startsWith('/')) return src  // external/relative — leave alone
+>   return `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}${src}`
+> }
+> ```
 
 ### 5.2 `postcss.config.js`
 
@@ -1406,8 +1428,8 @@ jobs:
 >
 > **⚠️ `NEXT_PUBLIC_BASE_PATH` is required on the build step** — set it to `/langium-website`
 > for the default branch deployment.  Without it, Next.js `basePath` is empty, all `_next/`
-> asset requests 404, and CSS background images land at the wrong path.  See §5.1 for the
-> CSS background-image caveat.
+> asset requests 404, CSS background images land at the wrong path, and `<Image>` srcs are
+> missing the basePath prefix.  See §5.1 for the full asset base-path caveats.
 
 ### 15.2 `.github/workflows/preview.yml` — PR Preview Deployment
 
