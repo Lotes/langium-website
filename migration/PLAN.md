@@ -493,39 +493,66 @@ module.exports = {
 
 ### 5.3 `app/globals.css`
 
+> **🚨 CRITICAL — Never change component styling from the old Hugo site (applies to ALL phases):**
+> The component classes in `globals.css` must be an **exact copy** of
+> `old-website/tailwind/style.css`. Do **not** add new backgrounds, colours, or
+> transitions that were not present in the old site.  Any difference you introduce
+> here will make the migrated page look visually different from the original and
+> will need to be reverted.  Verified regressions introduced by previous phases:
+>
+> - `.feature-direction` must have **no** background — the old site never defined this
+>   class as a component rule, so the carousel navigation arrows were transparent.
+>   Adding `bg-emeraldLangiumDarker` creates dark-green blocks that don't exist on
+>   the old site.
+> - `.compare-item-container` must have **no** background — the old site never defined
+>   a background for these cards.  Adding `dark:bg-emeraldLangiumDarker` creates
+>   dark-green cards that don't exist on the old site.
+> - `.external-link` must have **no** `text-*` colour — the old site inherits text
+>   colour from the surrounding context.  Adding `text-emeraldLangium` changes all
+>   external links to teal.
+> - `.nav-link-desktop` must keep `text-base font-medium` and hover
+>   `dark:hover:text-white` / `hover:text-gray-900` — the old site used white hover
+>   text in dark mode.
+
 ```css
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ── Carry over all rules from old-website/hugo/static/custom.css ── */
-
-/* Nav link styles used in Header */
+/* ── Exact copy of old-website/tailwind/style.css component classes ── */
+/* IMPORTANT: never change these rules relative to the old Hugo site.
+   Any intentional design improvement must first be mirrored back to the
+   old site reference in PLAN.md and explicitly approved. */
 @layer components {
   .nav-link-desktop {
-    @apply text-gray-900 dark:text-gray-100 hover:text-emeraldLangium
-           dark:hover:text-emeraldLangium transition-colors duration-150;
+    @apply text-base font-medium dark:hover:text-white hover:text-gray-900;
+  }
+
+  .nav-link-mobile {
+    @apply h-10 text-base font-medium dark:hover:text-white hover:text-gray-700;
   }
 
   /* About/compare item cards */
-  .about-item-container { @apply flex flex-col items-center; }
-  .about-item          { @apply flex flex-col items-center text-center max-w-sm; }
-  .about-item-icon-container { @apply flex items-center justify-center h-40 mb-4; }
-  .about-item-title    { @apply mt-4 text-lg font-medium dark:text-gray-100; }
-  .item-text           { @apply mt-2 dark:text-gray-100 font-body; }
+  .about-item-container { @apply relative sm:h-120 sm:overflow-hidden flex justify-center items-center; }
+  .about-item          { @apply sm:absolute sm:left-0 flow-root px-6 sm:pb-8; }
+  .about-item-icon-container { @apply sm:h-60 sm:my-0 h-40 flex items-center justify-center; }
+  .about-item-title    { @apply sm:h-20 text-lg text-center font-medium text-gray-900 tracking-tight dark:text-gray-100; }
+  .item-text           {
+    @apply bg-gray-700 sm:bg-transparent absolute sm:relative top-0 left-0 w-full min-h-full
+           text-base text-gray-100 dark:text-gray-100 font-body tracking-wide
+           flex justify-center items-center sm:block p-6 sm:py-0 sm:px-0;
+  }
 
   /* Feature carousel */
-  .feature-item-container { @apply min-w-featureItem px-6 py-4; }
-  .feature-item-content   { @apply dark:bg-emeraldLangiumDarker rounded-xl p-6; }
-  .feature-direction      { @apply bg-emeraldLangiumDarker; }
+  .feature-item-container { @apply h-full min-w-featureItem border-transparent border-4 relative overflow-hidden flex justify-center items-center; }
+  .feature-item-content   { @apply h-full w-full box-border rounded-xl border-2 border-emeraldLangium dark:border-emeraldLangium sm:px-6 px-2 pb-6 mx-2 sm:mx-0 bg-emeraldLangium dark:bg-gray-900 shadow-lg; }
 
-  /* Compare (vs Xtext) items */
-  .compare-item-container { @apply dark:bg-emeraldLangiumDarker rounded-xl p-6 overflow-hidden; }
-  .compare-item           { @apply flow-root; }
+  /* Community icons */
+  .footer-item { @apply h-full w-16 mx-2 relative overflow-hidden; }
 
-  /* External link style */
+  /* External link style — dashed underline, NO colour (inherits from parent) */
   .external-link {
-    @apply text-emeraldLangium hover:text-emeraldLangiumABitDarker underline;
+    @apply border-b border-dashed hover:border-solid pb-underline;
   }
 
   /* Footer */

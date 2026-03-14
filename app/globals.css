@@ -2,19 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── Carry over all rules from old-website/hugo/static/custom.css ── */
-
-/* Nav link styles used in Header */
+/* ── Exact copy of old-website/tailwind/style.css component classes ── */
+/* IMPORTANT (see migration/PLAN.md §5.3): never change these rules relative
+   to the old Hugo site. Any intentional design improvement must first be
+   mirrored back to the old site reference in PLAN.md. */
 @layer components {
   .nav-link-desktop {
-    @apply text-gray-900 dark:text-gray-100 hover:text-emeraldLangium
-           dark:hover:text-emeraldLangium transition-colors duration-150;
+    @apply text-base font-medium dark:hover:text-white hover:text-gray-900;
   }
 
   .nav-link-mobile {
-    @apply block w-full py-2 text-gray-900 dark:text-gray-200
-           hover:text-emeraldLangium dark:hover:text-emeraldLangium
-           transition-colors duration-150;
+    @apply h-10 text-base font-medium dark:hover:text-white hover:text-gray-700;
   }
 
   /* About/compare item cards */
@@ -31,18 +29,13 @@
   /* Feature carousel */
   .feature-item-container { @apply h-full min-w-featureItem border-transparent border-4 relative overflow-hidden flex justify-center items-center; }
   .feature-item-content   { @apply h-full w-full box-border rounded-xl border-2 border-emeraldLangium dark:border-emeraldLangium sm:px-6 px-2 pb-6 mx-2 sm:mx-0 bg-emeraldLangium dark:bg-gray-900 shadow-lg; }
-  .feature-direction      { @apply bg-emeraldLangiumDarker; }
-
-  /* Compare (vs Xtext) items */
-  .compare-item-container { @apply dark:bg-emeraldLangiumDarker rounded-xl p-6 overflow-hidden; }
-  .compare-item           { @apply flow-root; }
 
   /* Community icons */
   .footer-item { @apply h-full w-16 mx-2 relative overflow-hidden; }
 
-  /* External link style — dashed underline matching original langium.org */
+  /* External link style — dashed underline (no teal color: matches old site) */
   .external-link {
-    @apply border-b border-dashed hover:border-solid pb-underline text-emeraldLangium;
+    @apply border-b border-dashed hover:border-solid pb-underline;
   }
 
   /* Footer */
