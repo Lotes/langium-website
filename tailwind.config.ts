@@ -45,7 +45,11 @@ const config: Config = {
         accentLightBlue:          '#BCDBEF',
       },
       backgroundImage: {
-        office: "url('/assets/office.jpg')",  // Updated path for public/
+        // IMPORTANT: CSS background-image URLs are NOT automatically prefixed by
+        // Next.js basePath — unlike <Image> and <Link>.  Always interpolate
+        // NEXT_PUBLIC_BASE_PATH here so the URL is correct on sub-path deployments
+        // (e.g. /langium-website/... or /langium-website/pr-preview/pr-N/...).
+        office: `url('${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/assets/office.jpg')`,
       },
     },
   },

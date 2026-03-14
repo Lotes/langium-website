@@ -431,7 +431,9 @@ const config: Config = {
         accentLightBlue:          '#BCDBEF',
       },
       backgroundImage: {
-        office: "url('/assets/office.jpg')",  // Updated path for public/
+        // CSS background-image URLs are NOT prefixed by Next.js basePath automatically.
+        // Must interpolate NEXT_PUBLIC_BASE_PATH here.
+        office: `url('${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/assets/office.jpg')`,
       },
     },
   },
@@ -447,6 +449,14 @@ export default config
 > merged into Tailwind core in v3.3). Added `@tailwindcss/typography` for MDX prose styling.
 > The `office` background image URL is updated from `../assets/` to `/assets/` (Next.js
 > serves from `public/`).
+>
+> **⚠️ Base path — CSS background images (applies to all future phases):**
+> Next.js automatically prepends `basePath` to paths used in `<Image>` and `<Link>`
+> components, but it does **not** rewrite plain CSS `background-image: url(...)` values.
+> Any CSS background image that references a `public/` asset must interpolate
+> `process.env.NEXT_PUBLIC_BASE_PATH` so the URL is correct on sub-path deployments
+> (`/langium-website/` for the default branch, `/langium-website/pr-preview/pr-N/` for
+> previews). Failure to do so causes a 404 on every GitHub Pages deployment.
 
 ### 5.2 `postcss.config.js`
 
@@ -1393,6 +1403,11 @@ jobs:
 > **Key difference from old `deploy.yml`:** The branch is `lotes/nextra` (not `main`).
 > The build artifact path is `./out` (Next.js static export) instead of `./public` (Hugo).
 > Node.js version is updated to 20 (LTS as of 2024+).
+>
+> **⚠️ `NEXT_PUBLIC_BASE_PATH` is required on the build step** — set it to `/langium-website`
+> for the default branch deployment.  Without it, Next.js `basePath` is empty, all `_next/`
+> asset requests 404, and CSS background images land at the wrong path.  See §5.1 for the
+> CSS background-image caveat.
 
 ### 15.2 `.github/workflows/preview.yml` — PR Preview Deployment
 
