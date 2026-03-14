@@ -24,6 +24,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
+        {/* nextra-theme-docs uses Tailwind v4 CSS — load as static file to bypass Tailwind v3 PostCSS */}
+        <link rel="stylesheet" href="/nextra-theme-docs.css" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link
