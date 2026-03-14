@@ -1,3 +1,5 @@
+# Indentation-sensitive Languages
+
 Some programming languages (such as Python, Haskell, and YAML) use indentation to denote nesting, as opposed to special non-whitespace tokens (such as `{` and `}` in C++/JavaScript).
 This can be difficult to express in the EBNF notation used for defining a language grammar in Langium, which is context-free.
 To achieve that, you can make use of synthetic tokens in the grammar which you would then redefine in a custom token builder.

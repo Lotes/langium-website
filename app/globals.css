@@ -41,3 +41,43 @@
   /* Footer */
   #website-footer a { @apply hover:underline; }
 }
+
+/* ── Docs section overrides ─────────────────────────────────────── */
+
+/* Tune nextra-theme-docs primary colour to Langium's emerald (#26888C ≈ hsl 183 57% 35%).
+   These variables are defined in nextra-theme-docs.css @layer theme; our later declaration
+   wins in cascade order. */
+:root {
+  --nextra-primary-hue: 183;
+  --nextra-primary-saturation: 57%;
+  --nextra-primary-lightness: 35%;
+  /* Align nextra's sticky-sidebar top offset with our custom <Header> height. */
+  --nextra-navbar-height: 80px;
+}
+
+/* The root layout applies font-mono to <body>.  Override it within the docs
+   section so all text (sidebar, headings, body) uses a readable sans-serif.
+   Code/pre/kbd keep their monospace font via nextra-theme-docs.css @layer base. */
+.docs-layout {
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Apply @tailwindcss/typography prose styles to the MDX article body. */
+[data-pagefind-body] {
+  @apply prose prose-slate dark:prose-invert max-w-none;
+}
+
+/* Nextra heading components render an anchor child (#) for permalinks.
+   Remove underline from those anchors so they don't look like regular links. */
+[data-pagefind-body] :is(h1, h2, h3, h4, h5, h6) a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* The nextra-theme-docs already styles code blocks; prevent prose from
+   double-styling them with a conflicting background. */
+[data-pagefind-body] pre {
+  background-color: transparent;
+  padding: 0;
+}

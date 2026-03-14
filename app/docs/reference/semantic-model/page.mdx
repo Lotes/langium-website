@@ -1,3 +1,5 @@
+# Semantic Model Inference
+
 When AST nodes are created during the parsing of a document, they are given a type. The language grammar dictates the shape of those types and how they might be related to each other. All types form the *semantic model* of your language. There are two ways by which Langium derives semantic model types from the grammar, by **[inference](#inferred-types)** and by **[declaration](#declared-types)**.
 
 *Inference* is the default behavior in Langium. During the generation of the semantic model types, Langium infers the possible types directly from the grammar rules. While this is a powerful approach for simple languages and prototypes, it is not recommended for more mature languages since minimal changes in the grammar can easily lead to breaking changes.
