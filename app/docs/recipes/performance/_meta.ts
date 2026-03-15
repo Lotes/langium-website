@@ -1,4 +1,4 @@
 export default {
-  'index': { title: 'Performance' },
+  'index': { display: 'hidden' },
   caches: { title: 'Caches' },
 }

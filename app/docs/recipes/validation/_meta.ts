@@ -1,4 +1,4 @@
 export default {
-  'index': { title: 'Validation' },
+  'index': { display: 'hidden' },
   'dependency-loops': { title: 'Dependency Loops' },
 }

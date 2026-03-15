@@ -2,22 +2,31 @@ import nextra from 'nextra'
 import { createRequire } from 'module'
 import { fileURLToPath } from 'url'
 import path from 'path'
+import { bundledLanguages, createHighlighter } from 'shiki'
 
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+const langiumGrammar = {
+  // Spread the full TextMate grammar, but override name to lowercase so it
+  // matches the ```langium fenced code block language tag.
+  ...require('./public/langium.tmLanguage.json'),
+  name: 'langium',
+}
 
 const withNextra = nextra({
   defaultShowCopyCode: true,
   mdxOptions: {
     rehypePrettyCodeOptions: {
-      // Register the custom Langium TextMate grammar for Shiki syntax highlighting
-      langs: [
-        {
-          id: 'langium',
-          scopeName: 'source.langium',
-          grammar: require('./public/langium.tmLanguage.json'),
-        },
-      ],
+      // Override the default getHighlighter so the custom Langium grammar is
+      // included alongside all other bundled Shiki languages.
+      getHighlighter(opts) {
+        const allLangs = Object.keys(bundledLanguages).filter((l) => l !== 'mermaid')
+        return createHighlighter({
+          ...opts,
+          langs: [...allLangs, langiumGrammar],
+        })
+      },
     },
   },
 })

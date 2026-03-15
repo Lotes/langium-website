@@ -1,5 +1,5 @@
 export default {
-  'index': { title: 'MiniLogo' },
+  'index': { display: 'hidden' },
   writing_a_grammar: { title: 'Writing a Grammar' },
   validation: { title: 'Validation' },
   generation: { title: 'Generation' },

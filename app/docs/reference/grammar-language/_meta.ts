@@ -1,4 +1,4 @@
 export default {
-  'index': { title: 'Grammar Language' },
+  'index': { display: 'hidden' },
   'infix-operators': { title: 'Infix Operators' },
 }

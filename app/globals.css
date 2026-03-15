@@ -75,9 +75,23 @@
   color: inherit;
 }
 
-/* The nextra-theme-docs already styles code blocks; prevent prose from
-   double-styling them with a conflicting background. */
+/* Code blocks: defer background/padding to nextra-theme-docs so the
+   Shiki-rendered blocks keep their dark/light surface colour and border-radius. */
 [data-pagefind-body] pre {
   background-color: transparent;
   padding: 0;
+  margin: 0;
+}
+
+/* Inline code: reset Tailwind prose's bold weight and add a subtle background
+   so it is clearly distinguishable from body text without appearing bold. */
+[data-pagefind-body] :not(pre) > code {
+  font-weight: normal;
+  background-color: rgb(0 0 0 / 0.06);
+  border-radius: 0.25rem;
+  padding: 0.1em 0.35em;
+}
+
+.dark [data-pagefind-body] :not(pre) > code {
+  background-color: rgb(255 255 255 / 0.08);
 }

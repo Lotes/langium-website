@@ -1,5 +1,5 @@
 export default {
-  'index': { title: 'Recipes' },
+  'index': { display: 'hidden' },
   'builtin-library': { title: 'Built-in Library' },
   formatting: { title: 'Formatting' },
   'multiple-languages': { title: 'Multiple Languages' },

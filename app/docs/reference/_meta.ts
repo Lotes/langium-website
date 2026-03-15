@@ -1,5 +1,5 @@
 export default {
-  'index': { title: 'Reference' },
+  'index': { display: 'hidden' },
   glossary: { title: 'Glossary' },
   'configuration-services': { title: 'Configuration Services' },
   'document-lifecycle': { title: 'Document Lifecycle' },
