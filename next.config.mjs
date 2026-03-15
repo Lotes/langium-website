@@ -21,6 +21,9 @@ const withNextra = nextra({
       // Override the default getHighlighter so the custom Langium grammar is
       // included alongside all other bundled Shiki languages.
       getHighlighter(opts) {
+        // Exclude 'mermaid' because nextra's remark-mermaid plugin renders those
+        // fenced blocks as SVG diagrams — passing it to Shiki would highlight the
+        // raw Mermaid source instead of rendering the diagram.
         const allLangs = Object.keys(bundledLanguages).filter((l) => l !== 'mermaid')
         return createHighlighter({
           ...opts,

@@ -80,7 +80,6 @@
 [data-pagefind-body] pre {
   background-color: transparent;
   padding: 0;
-  margin: 0;
 }
 
 /* Inline code: reset Tailwind prose's bold weight and add a subtle background
