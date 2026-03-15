@@ -75,11 +75,16 @@
   color: inherit;
 }
 
-/* Code blocks: defer background/padding to nextra-theme-docs so the
-   Shiki-rendered blocks keep their dark/light surface colour and border-radius. */
+/* Code blocks: give them the same subtle background as inline code so they are
+   clearly distinguishable from body text without the heavy nextra default
+   (solid white / black). Use !important to beat nextra's utility class
+   specificity regardless of stylesheet load order. */
 [data-pagefind-body] pre {
-  background-color: transparent;
-  padding: 0;
+  background-color: rgb(0 0 0 / 0.06) !important;
+}
+
+.dark [data-pagefind-body] pre {
+  background-color: rgb(255 255 255 / 0.08) !important;
 }
 
 /* Inline code: reset Tailwind prose's bold weight and add a subtle background

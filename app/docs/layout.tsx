@@ -16,6 +16,7 @@ export default async function DocsLayout({ children }: { children: ReactNode }) 
         toc={{ backToTop: 'Back to top' }}
         darkMode={true}
         nextThemes={{ defaultTheme: 'dark' }}
+        copyPageButton={false}
       >
         {children}
       </Layout>

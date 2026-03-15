@@ -1,5 +1,4 @@
 export default {
-  'index': { display: 'hidden' },
   install: { title: '1. Install Yeoman' },
   scaffold: { title: '2. Scaffold a Langium project' },
   write_grammar: { title: '3. Write the grammar' },
