@@ -1,4 +1,4 @@
-import { Layout } from 'nextra-theme-docs'
+import { Footer, Layout } from 'nextra-theme-docs'
 import { getPageMap } from 'nextra/page-map'
 import type { ReactNode } from 'react'
 
@@ -17,6 +17,21 @@ export default async function DocsLayout({ children }: { children: ReactNode }) 
         darkMode={true}
         nextThemes={{ defaultTheme: 'dark' }}
         copyPageButton={false}
+        footer={
+          <Footer>
+            Built by{' '}
+            <a href="https://www.typefox.io/" target="_blank" rel="noreferrer"
+               className="hover:underline">
+              TypeFox
+            </a>{' '}
+            with{' '}
+            <a href="https://nextra.site/" target="_blank" rel="noreferrer"
+               className="hover:underline">
+              Nextra
+            </a>{' '}
+            and ♥
+          </Footer>
+        }
       >
         {children}
       </Layout>
