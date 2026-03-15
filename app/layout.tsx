@@ -24,6 +24,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
+        {/* nextra-theme-docs uses Tailwind v4 CSS — load as static file to bypass Tailwind v3 PostCSS.
+            Prefix with NEXT_PUBLIC_BASE_PATH so the URL is correct on sub-path deployments
+            (GitHub Pages / PR previews). */}
+        <link rel="stylesheet" href={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/nextra-theme-docs.css`} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link

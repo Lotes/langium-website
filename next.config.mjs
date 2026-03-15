@@ -1,7 +1,37 @@
 import nextra from 'nextra'
+import { createRequire } from 'module'
+import { fileURLToPath } from 'url'
+import path from 'path'
+import { bundledLanguages, createHighlighter } from 'shiki'
+
+const require = createRequire(import.meta.url)
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+const langiumGrammar = {
+  // Spread the full TextMate grammar, but override name to lowercase so it
+  // matches the ```langium fenced code block language tag.
+  ...require('./public/langium.tmLanguage.json'),
+  name: 'langium',
+}
 
 const withNextra = nextra({
   defaultShowCopyCode: true,
+  mdxOptions: {
+    rehypePrettyCodeOptions: {
+      // Override the default getHighlighter so the custom Langium grammar is
+      // included alongside all other bundled Shiki languages.
+      getHighlighter(opts) {
+        // Exclude 'mermaid' because nextra's remark-mermaid plugin renders those
+        // fenced blocks as SVG diagrams — passing it to Shiki would highlight the
+        // raw Mermaid source instead of rendering the diagram.
+        const allLangs = Object.keys(bundledLanguages).filter((l) => l !== 'mermaid')
+        return createHighlighter({
+          ...opts,
+          langs: [...allLangs, langiumGrammar],
+        })
+      },
+    },
+  },
 })
 
 export default withNextra({
@@ -15,4 +45,12 @@ export default withNextra({
   basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
   // Note: redirects() is not supported with output: 'export'.
   // Hugo alias redirects are handled via static stub pages — see §14 (Phase 10).
+  webpack(config) {
+    // Ensure next-mdx-import-source-file resolves to our mdx-components.tsx.
+    // Nextra sets this alias via private-next-root-dir, but that chain only works
+    // once Next.js has registered its own private-next-root-dir alias. Adding an
+    // explicit absolute path here guarantees resolution in all webpack configs.
+    config.resolve.alias['next-mdx-import-source-file'] = path.resolve(__dirname, 'mdx-components.tsx')
+    return config
+  },
 })
